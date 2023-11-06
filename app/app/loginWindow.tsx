@@ -4,13 +4,10 @@ import { useState } from "react";
 
 export default function LoginWindow(
   { setUpProfile }: {
-    setUpProfile:  (form: FormData) => Promise<void>;
+    setUpProfile: (form: FormData) => Promise<void>;
   }
 ) {
-
-  /* 
-    TODO #1: Add a state variable to store the current error message
-  */
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // TODO #1
 
   /*
     This function is called to set up the profile of the new user. It is called
@@ -19,19 +16,17 @@ export default function LoginWindow(
     @param form - FormData object containing the username and name of the new user
   */
   const onSubmit = async (form: FormData) => {
-    /* 
-      TODO #3: Set the error state to an empty string
-    */
-
-    /* 
-      TODO #4: Set up a try catch block to call the setUpProfile() function and set the error state
-      if an error is thrown
-
-      HINT: 
-        - Use the setUpProfile() function to set up the user's profile and log them in
-        - In the catch block, set the error state to the error message (error.message)
-    */
-  }
+    // Clear any previous error messages
+    setErrorMessage('');
+  
+    try {
+      // Call the setUpProfile function and wait for it to complete
+      await setUpProfile(form);
+    } catch (error) {
+      // If an error occurs during setUpProfile, set the error message
+      setErrorMessage((error as Error).message);
+    }
+  };
 
   return (
     <form action={onSubmit} >
@@ -63,12 +58,7 @@ export default function LoginWindow(
             Create Account
           </button>
           <p className="text-red-500">
-            {/* 
-              TODO #2: Display the error message if it is not an empty string using the error state variable
-            */}
-            {
-              "PLACEHOLDER"
-            }
+            {errorMessage && errorMessage}
           </p>
         </div>
       </div>
